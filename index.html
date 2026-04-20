@@ -18,7 +18,6 @@
     padding: 20px 10px;
   }
 
-  /* ─── KERTAS F4 POTRAIT ─── */
   .kertas {
     width: 215mm;
     min-height: 330mm;
@@ -40,7 +39,6 @@
   }
   .identitas td { padding: 4px 0; border: none !important; }
 
-  /* ─── TABEL LAPORAN (Garis Tipis & Judul Bold) ─── */
   table.laporan {
     width: 100%;
     border-collapse: collapse;
@@ -59,11 +57,11 @@
     text-transform: uppercase;
   }
 
-  .col-no { width: 35px; text-align: center; }
-  .col-tgl { width: 95px; text-align: center; }
-  .col-lok { width: 140px; }
+  .col-no   { width: 35px;  text-align: center; }
+  .col-tgl  { width: 95px;  text-align: center; }
+  .col-lok  { width: 140px; }
   .col-foto { width: 170px; text-align: center; }
-  .col-aksi { width: 85px; text-align: center; }
+  .col-aksi { width: 85px;  text-align: center; }
 
   .foto-preview {
     width: 100%;
@@ -73,18 +71,16 @@
     margin: 0 auto;
   }
 
-  /* ─── TANDA TANGAN ─── */
   .ttd-wrapper {
     display: flex;
     justify-content: space-between;
     margin-top: 40px;
     font-size: 12pt;
   }
-  .ttd-box { width: 45%; text-align: center; }
+  .ttd-box  { width: 45%; text-align: center; }
   .ttd-space { height: 75px; }
   .ttd-nama { font-weight: bold; text-decoration: underline; }
 
-  /* ─── PANEL INPUT ─── */
   .panel {
     width: 215mm;
     margin-top: 20px;
@@ -96,14 +92,44 @@
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
   .ig { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
   .ig label { font-weight: bold; font-size: 10pt; color: #333; }
-  .ig input, .ig textarea { padding: 10px; border: 1px solid #ccc; font-size: 11pt; border-radius: 4px; }
+  .ig input, .ig textarea {
+    padding: 10px; border: 1px solid #ccc;
+    font-size: 11pt; border-radius: 4px;
+  }
   .btn-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-  
+
   button { padding: 12px 18px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s; }
   button:active { transform: scale(0.97); }
 
   .btn-edit-s { background: #f39c12; color: #fff; font-size: 8pt; width: 100%; margin-bottom: 4px; padding: 6px; }
   .btn-del-s  { background: #e74c3c; color: #fff; font-size: 8pt; width: 100%; padding: 6px; }
+
+  #limitInfo       { font-size: 10pt; color: #555; margin-top: 6px; }
+  #limitInfo.penuh { color: #e74c3c; font-weight: bold; }
+
+  /* Loading overlay saat kompresi foto */
+  #loadingOverlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #fff;
+    font-size: 13pt;
+    font-weight: bold;
+    gap: 14px;
+  }
+  #loadingOverlay.show { display: flex; }
+  .spinner {
+    width: 44px; height: 44px;
+    border: 5px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   @media print {
     @page { size: 215mm 330mm; margin: 10mm; }
@@ -112,7 +138,6 @@
     .kertas { box-shadow: none; width: 100%; padding: 0; }
   }
 
-  /* Responsif HP saat nginput */
   @media (max-width: 215mm) {
     .kertas, .panel { width: 100%; }
     .kertas { height: auto; padding: 10mm; }
@@ -121,6 +146,11 @@
 </head>
 <body>
 
+<div id="loadingOverlay">
+  <div class="spinner"></div>
+  <div>Mengompresi foto…</div>
+</div>
+
 <div class="kertas" id="areaCetak">
   <div class="header">
     <h2>Laporan Kegiatan Harian</h2>
@@ -128,7 +158,7 @@
   </div>
 
   <table class="identitas">
-    <tr><td style="width:100px">Nama</td><td style="width:15px; text-align:center">:</td><td id="outNama">Mohamad Asep Suryana</td></tr>
+    <tr><td style="width:100px">Nama</td><td style="width:15px;text-align:center">:</td><td id="outNama">Mohamad Asep Suryana</td></tr>
     <tr><td>Jabatan</td><td style="text-align:center">:</td><td id="outJabatan">Tenaga Penanganan Prasarana dan Sarana Umum</td></tr>
     <tr><td>Unit Kerja</td><td style="text-align:center">:</td><td id="outUnitKerja">Dinas Perumahan Rakyat Dan Kawasan Permukiman Kota Cirebon</td></tr>
     <tr><td>Bulan</td><td style="text-align:center">:</td><td id="outBulan">April 2026</td></tr>
@@ -174,8 +204,13 @@
     <div class="ig"><label>Lokasi (Cth: Jl. Cipto)</label><input type="text" id="inLok" placeholder="Masukkan lokasi kerja"></div>
   </div>
   <div class="ig"><label>Uraian Tugas</label><textarea id="inUraian" rows="3" placeholder="Apa yang Anda kerjakan hari ini?"></textarea></div>
-  <div class="ig"><label>Foto Kegiatan</label><input type="file" id="inFoto" accept="image/*"></div>
-  
+  <div class="ig">
+    <label>Foto Kegiatan <small style="color:#888">(otomatis dikompres agar ringan &amp; bisa dicetak)</small></label>
+    <input type="file" id="inFoto" accept="image/*">
+  </div>
+
+  <div id="limitInfo">Baris terisi: <span id="jmlBaris">0</span> / 7</div>
+
   <div class="btn-group">
     <button style="background:#27ae60;color:#fff" id="btnSimpan" onclick="simpan()">＋ Tambah</button>
     <button style="background:#2c5f9e;color:#fff" onclick="window.print()">🖨 Cetak / PDF</button>
@@ -185,153 +220,195 @@
 </div>
 
 <script>
-let dataLaporan = [];
-let editIndex = -1;
+  const MAX_BARIS  = 7;
+  const MAX_LEBAR  = 900;    // resize foto max lebar 900px
+  const MAX_BYTES  = 180000; // target ~180 KB (base64 ~37% lebih besar, jadi ~130 KB asli)
 
-// MENGAMBIL DATA SAAT HALAMAN DIBUKA (GITHUB PAGES READY)
-window.onload = () => {
-  const dSimpan = localStorage.getItem('pjlp_db');
-  const pSimpan = localStorage.getItem('pjlp_prof');
-  
-  if (dSimpan) {
-    dataLaporan = JSON.parse(dSimpan);
-    tampilkanTabel();
+  let dataLaporan = [];
+  let editIndex   = -1;
+
+  /* ─── Kompresi foto via Canvas (cepat, tanpa library) ─── */
+  function kompresiFoto(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          let w = img.width, h = img.height;
+          // Resize proporsional jika terlalu besar
+          if (w > MAX_LEBAR) { h = Math.round(h * MAX_LEBAR / w); w = MAX_LEBAR; }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+
+          // Turunkan kualitas JPEG bertahap sampai ukuran cukup kecil
+          let q   = 0.85;
+          let b64 = canvas.toDataURL('image/jpeg', q);
+          while (b64.length > MAX_BYTES * 1.37 && q > 0.25) {
+            q  -= 0.07;
+            b64 = canvas.toDataURL('image/jpeg', q);
+          }
+          resolve(b64);
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
   }
-  
-  if (pSimpan) {
-    const p = JSON.parse(pSimpan);
-    document.getElementById('inNama').value = p.nama;
-    document.getElementById('inJabatan').value = p.jabatan;
-    document.getElementById('inUnitKerja').value = p.unit;
-    document.getElementById('inBulan').value = p.bulan;
-    updateLabel(p);
+
+  /* ─── Simpan ke localStorage ─── */
+  function simpanLS() {
+    try {
+      localStorage.setItem('pjlp_db', JSON.stringify(dataLaporan));
+    } catch {
+      alert('Penyimpanan penuh! Coba hapus beberapa baris atau hapus foto yang terlalu banyak.');
+    }
   }
-};
 
-function updateLabel(p) {
-  document.getElementById('outNama').innerText = p.nama;
-  document.getElementById('outJabatan').innerText = p.jabatan;
-  document.getElementById('outUnitKerja').innerText = p.unit;
-  document.getElementById('outBulan').innerText = p.bulan;
-  document.getElementById('outBulanTTD').innerText = p.bulan;
-}
-
-function simpan() {
-  const tgl = document.getElementById('inTgl').value;
-  const lok = document.getElementById('inLok').value;
-  const uraian = document.getElementById('inUraian').value;
-  const fInp = document.getElementById('inFoto');
-
-  if (!tgl || !uraian) return alert('Lengkapi Tanggal dan Uraian Tugas!');
-
-  // Simpan profil agar tidak perlu ngetik ulang
-  const prof = {
-    nama: document.getElementById('inNama').value,
-    jabatan: document.getElementById('inJabatan').value,
-    unit: document.getElementById('inUnitKerja').value,
-    bulan: document.getElementById('inBulan').value
+  /* ─── Init ─── */
+  window.onload = () => {
+    const dS = localStorage.getItem('pjlp_db');
+    const pS = localStorage.getItem('pjlp_prof');
+    if (dS) { dataLaporan = JSON.parse(dS); tampilkanTabel(); }
+    if (pS) {
+      const p = JSON.parse(pS);
+      document.getElementById('inNama').value      = p.nama;
+      document.getElementById('inJabatan').value   = p.jabatan;
+      document.getElementById('inUnitKerja').value = p.unit;
+      document.getElementById('inBulan').value     = p.bulan;
+      updateLabel(p);
+    }
   };
-  localStorage.setItem('pjlp_prof', JSON.stringify(prof));
-  updateLabel(prof);
 
-  const olahData = (fotoBase64) => {
-    const tglSplit = tgl.split('-');
-    const tglIndo = `${tglSplit[2]}/${tglSplit[1]}/${tglSplit[0]}`;
-    
-    const obj = { tgl: tglIndo, raw: tgl, lok, uraian, foto: fotoBase64 };
+  function updateLabel(p) {
+    document.getElementById('outNama').innerText      = p.nama;
+    document.getElementById('outJabatan').innerText   = p.jabatan;
+    document.getElementById('outUnitKerja').innerText = p.unit;
+    document.getElementById('outBulan').innerText     = p.bulan;
+    document.getElementById('outBulanTTD').innerText  = p.bulan;
+  }
+
+  function updateLimitInfo() {
+    document.getElementById('jmlBaris').innerText  = dataLaporan.length;
+    document.getElementById('limitInfo').className = dataLaporan.length >= MAX_BARIS ? 'penuh' : '';
+  }
+
+  /* ─── Tambah / Update ─── */
+  async function simpan() {
+    const tgl    = document.getElementById('inTgl').value;
+    const lok    = document.getElementById('inLok').value;
+    const uraian = document.getElementById('inUraian').value;
+    const fInp   = document.getElementById('inFoto');
+
+    if (!tgl || !uraian) return alert('Lengkapi Tanggal dan Uraian Tugas!');
+    if (editIndex === -1 && dataLaporan.length >= MAX_BARIS)
+      return alert('Maksimal 7 baris sudah tercapai. Hapus salah satu baris terlebih dahulu.');
+
+    // Simpan profil
+    const prof = {
+      nama:    document.getElementById('inNama').value,
+      jabatan: document.getElementById('inJabatan').value,
+      unit:    document.getElementById('inUnitKerja').value,
+      bulan:   document.getElementById('inBulan').value
+    };
+    localStorage.setItem('pjlp_prof', JSON.stringify(prof));
+    updateLabel(prof);
+
+    const [yy, mm, dd] = tgl.split('-');
+    const tglIndo = `${dd}/${mm}/${yy}`;
+
+    // Foto: kompres jika ada file baru, pakai lama jika tidak
+    let fotoB64 = (editIndex !== -1) ? (dataLaporan[editIndex].foto || null) : null;
+    if (fInp.files && fInp.files[0]) {
+      document.getElementById('loadingOverlay').classList.add('show');
+      fotoB64 = await kompresiFoto(fInp.files[0]);
+      document.getElementById('loadingOverlay').classList.remove('show');
+    }
+
+    const obj = { tgl: tglIndo, raw: tgl, lok, uraian, foto: fotoB64 };
 
     if (editIndex === -1) {
       dataLaporan.push(obj);
     } else {
-      if (!fotoBase64 && dataLaporan[editIndex].foto) obj.foto = dataLaporan[editIndex].foto;
       dataLaporan[editIndex] = obj;
       editIndex = -1;
       document.getElementById('btnSimpan').innerText = '＋ Tambah';
     }
 
-    localStorage.setItem('pjlp_db', JSON.stringify(dataLaporan));
+    simpanLS();
     tampilkanTabel();
     bersihkanForm();
-  };
-
-  if (fInp.files && fInp.files[0]) {
-    const fr = new FileReader();
-    fr.onload = e => olahData(e.target.result);
-    fr.readAsDataURL(fInp.files[0]);
-  } else {
-    olahData(editIndex !== -1 ? dataLaporan[editIndex].foto : null);
   }
-}
 
-function tampilkanTabel() {
-  const tbody = document.getElementById('tbody');
-  tbody.innerHTML = '';
-  dataLaporan.forEach((item, i) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="text-align:center">${i+1}</td>
-      <td style="text-align:center">${item.tgl}</td>
-      <td>${item.lok}</td>
-      <td style="text-align:justify">${item.uraian.replace(/\n/g, '<br>')}</td>
-      <td style="text-align:center">${item.foto ? `<img src="${item.foto}" class="foto-preview">` : ''}</td>
-      <td class="no-print" style="text-align:center">
-        <button class="btn-edit-s" onclick="mulaiEdit(${i})">Edit</button>
-        <button class="btn-del-s" onclick="hapusBaris(${i})">Hapus</button>
-      </td>`;
-    tbody.appendChild(tr);
-  });
-}
-
-function mulaiEdit(i) {
-  editIndex = i;
-  document.getElementById('inTgl').value = dataLaporan[i].raw;
-  document.getElementById('inLok').value = dataLaporan[i].lok;
-  document.getElementById('inUraian').value = dataLaporan[i].uraian;
-  document.getElementById('btnSimpan').innerText = '✔ Update Data';
-  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-}
-
-function hapusBaris(i) {
-  if (confirm('Hapus baris ini?')) {
-    dataLaporan.splice(i, 1);
-    localStorage.setItem('pjlp_db', JSON.stringify(dataLaporan));
-    tampilkanTabel();
+  /* ─── Render tabel (satu innerHTML, lebih cepat) ─── */
+  function tampilkanTabel() {
+    document.getElementById('tbody').innerHTML = dataLaporan.map((item, i) => `
+      <tr>
+        <td style="text-align:center">${i + 1}</td>
+        <td style="text-align:center">${item.tgl}</td>
+        <td>${item.lok}</td>
+        <td style="text-align:justify">${item.uraian.replace(/\n/g, '<br>')}</td>
+        <td style="text-align:center">${item.foto ? `<img src="${item.foto}" class="foto-preview">` : ''}</td>
+        <td class="no-print" style="text-align:center">
+          <button class="btn-edit-s" onclick="mulaiEdit(${i})">Edit</button>
+          <button class="btn-del-s"  onclick="hapusBaris(${i})">Hapus</button>
+        </td>
+      </tr>`).join('');
+    updateLimitInfo();
   }
-}
 
-function resetData() {
-  if (confirm('PERINGATAN: Semua data laporan dan profil akan dihapus permanen. Lanjutkan?')) {
-    localStorage.clear();
-    location.reload();
+  function mulaiEdit(i) {
+    editIndex = i;
+    document.getElementById('inTgl').value    = dataLaporan[i].raw;
+    document.getElementById('inLok').value    = dataLaporan[i].lok;
+    document.getElementById('inUraian').value = dataLaporan[i].uraian;
+    document.getElementById('btnSimpan').innerText = '✔ Update Data';
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
   }
-}
 
-function bersihkanForm() {
-  document.getElementById('inTgl').value = '';
-  document.getElementById('inLok').value = '';
-  document.getElementById('inUraian').value = '';
-  document.getElementById('inFoto').value = '';
-}
+  function hapusBaris(i) {
+    if (confirm('Hapus baris ini?')) {
+      dataLaporan.splice(i, 1);
+      simpanLS();
+      tampilkanTabel();
+    }
+  }
 
-function exportWord() {
-  const html = `
-    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-    <head><meta charset='utf-8'><style>
-      body { font-family: 'Arial Narrow', sans-serif; }
-      table { border-collapse: collapse; width: 100%; }
-      th, td { border: 1px solid black; padding: 5px; vertical-align: top; }
-      .header { text-align: center; }
-      img { max-width: 150px; }
-    </style></head>
-    <body>${document.getElementById('areaCetak').innerHTML}</body></html>`;
-  
-  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = 'Laporan_PJLP.doc';
-  link.click();
-}
+  function resetData() {
+    if (confirm('PERINGATAN: Semua data laporan dan profil akan dihapus permanen. Lanjutkan?')) {
+      localStorage.clear();
+      location.reload();
+    }
+  }
+
+  function bersihkanForm() {
+    document.getElementById('inTgl').value    = '';
+    document.getElementById('inLok').value    = '';
+    document.getElementById('inUraian').value = '';
+    document.getElementById('inFoto').value   = '';
+  }
+
+  function exportWord() {
+    const html = `
+      <html xmlns:o='urn:schemas-microsoft-com:office:office'
+            xmlns:w='urn:schemas-microsoft-com:office:word'
+            xmlns='http://www.w3.org/TR/REC-html40'>
+      <head><meta charset='utf-8'><style>
+        body { font-family: 'Arial Narrow', sans-serif; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid black; padding: 5px; vertical-align: top; }
+        .header { text-align: center; }
+        img { max-width: 150px; }
+      </style></head>
+      <body>${document.getElementById('areaCetak').innerHTML}</body></html>`;
+    const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = 'Laporan_PJLP.doc';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
 </script>
 </body>
 </html>
