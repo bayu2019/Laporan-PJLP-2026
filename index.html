@@ -5,12 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Laporan Kegiatan Harian PJLP</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Arial+Narrow&display=swap');
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Arial Narrow', Arial, sans-serif;
+    font-family: Arial, sans-serif;
+    font-size: 12pt;
     background: #dde3ea;
     display: flex;
     flex-direction: column;
@@ -18,69 +17,105 @@
     padding: 20px 10px;
   }
 
+  /* F4 = 215mm x 330mm — padding top kecil agar judul rapat ke atas */
   .kertas {
     width: 215mm;
     min-height: 330mm;
     background: #fff;
-    padding: 15mm;
+    padding: 8mm 15mm 10mm 15mm;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    position: relative;
+    font-family: Arial, sans-serif;
+    font-size: 12pt;
   }
 
-  .header { text-align: center; margin-bottom: 20px; }
-  .header h2 { font-size: 14pt; font-weight: bold; text-transform: uppercase; }
-  .header h3 { font-size: 12pt; font-weight: bold; text-transform: uppercase; }
+  /* HEADER — langsung dari tepi atas (padding 8mm) */
+  .header {
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .header h2, .header h3 {
+    font-family: Arial, sans-serif;
+    font-size: 12pt !important;
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 1.5;
+  }
 
+  /* IDENTITAS */
   .identitas {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
+    font-family: Arial, sans-serif;
     font-size: 12pt;
   }
-  .identitas td { padding: 4px 0; border: none !important; }
+  .identitas td { padding: 1px 0; border: none !important; }
 
+  /* TABEL
+     Konten lebar = 215 - 15 - 15 = 185mm
+     NO:8mm | TANGGAL:27mm | LOKASI:33mm | URAIAN:auto | FOTO:68mm | AKSI:56px(no-print)
+  */
   table.laporan {
     width: 100%;
     border-collapse: collapse;
-    font-size: 12pt;
+    font-family: Arial, sans-serif;
+    font-size: 11pt;
     table-layout: fixed;
   }
-  table.laporan th, table.laporan td {
+  table.laporan th,
+  table.laporan td {
     border: 1px solid #000 !important;
-    padding: 8px 6px;
+    padding: 4px 4px;
     vertical-align: top;
     word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    font-family: Arial, sans-serif;
+    font-size: 11pt;
   }
   table.laporan thead th {
-    background: #f0f0f0;
+    background: #fff;
     font-weight: bold;
+    text-align: center;
     text-transform: uppercase;
+    vertical-align: middle;
+    white-space: nowrap;
+    font-size: 11pt;
   }
 
-  .col-no   { width: 35px;  text-align: center; }
-  .col-tgl  { width: 95px;  text-align: center; }
-  .col-lok  { width: 140px; }
-  .col-foto { width: 170px; text-align: center; }
-  .col-aksi { width: 85px;  text-align: center; }
+  col.c-no   { width: 10mm; }
+  col.c-tgl  { width: 26mm; }
+  col.c-lok  { width: 40mm; }
+  col.c-ur   { width: 45mm; }
+  col.c-foto { width: 64mm; }
+  col.c-aksi { width: 56px; }
 
+  td.cell-no  { text-align:center; vertical-align:middle; white-space:nowrap; }
+  td.cell-tgl { text-align:center; vertical-align:middle; white-space:nowrap; }
+  td.cell-foto { text-align:center; vertical-align:top; padding:3px; }
+
+  /* Foto landscape 6,3cm × 4,2cm */
   .foto-preview {
-    width: 100%;
-    max-height: 150px;
-    object-fit: contain;
+    width: 61mm;
+    height: 42mm;
+    object-fit: cover;
     display: block;
     margin: 0 auto;
   }
 
+  /* TTD */
   .ttd-wrapper {
     display: flex;
     justify-content: space-between;
-    margin-top: 40px;
-    font-size: 12pt;
+    margin-top: 16px;
+    font-family: Arial, sans-serif;
+    font-size: 11pt;
   }
-  .ttd-box  { width: 45%; text-align: center; }
-  .ttd-space { height: 75px; }
-  .ttd-nama { font-weight: bold; text-decoration: underline; }
+  .ttd-box   { width: 45%; text-align: center; }
+  .ttd-space { height: 55px; }
+  .ttd-nama  { font-weight: bold; text-decoration: underline; }
 
+  /* PANEL INPUT */
   .panel {
     width: 215mm;
     margin-top: 20px;
@@ -92,87 +127,80 @@
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
   .ig { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
   .ig label { font-weight: bold; font-size: 10pt; color: #333; }
-  .ig input, .ig textarea {
-    padding: 10px; border: 1px solid #ccc;
-    font-size: 11pt; border-radius: 4px;
-  }
+  .ig input, .ig textarea { padding: 9px; border: 1px solid #ccc; font-size: 11pt; border-radius: 4px; }
   .btn-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-
-  button { padding: 12px 18px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+  button { padding: 11px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s; }
   button:active { transform: scale(0.97); }
+  .btn-edit-s { background:#f39c12; color:#fff; font-size:8pt; width:100%; margin-bottom:4px; padding:5px; }
+  .btn-del-s  { background:#e74c3c; color:#fff; font-size:8pt; width:100%; padding:5px; }
+  #limitInfo       { font-size:10pt; color:#555; margin-top:6px; }
+  #limitInfo.penuh { color:#e74c3c; font-weight:bold; }
 
-  .btn-edit-s { background: #f39c12; color: #fff; font-size: 8pt; width: 100%; margin-bottom: 4px; padding: 6px; }
-  .btn-del-s  { background: #e74c3c; color: #fff; font-size: 8pt; width: 100%; padding: 6px; }
-
-  #limitInfo       { font-size: 10pt; color: #555; margin-top: 6px; }
-  #limitInfo.penuh { color: #e74c3c; font-weight: bold; }
-
-  /* Loading overlay saat kompresi foto */
   #loadingOverlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 999;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    color: #fff;
-    font-size: 13pt;
-    font-weight: bold;
-    gap: 14px;
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.5); z-index:999;
+    align-items:center; justify-content:center;
+    flex-direction:column; color:#fff;
+    font-size:13pt; font-weight:bold; gap:14px;
   }
-  #loadingOverlay.show { display: flex; }
+  #loadingOverlay.show { display:flex; }
   .spinner {
-    width: 44px; height: 44px;
-    border: 5px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.75s linear infinite;
+    width:44px; height:44px;
+    border:5px solid rgba(255,255,255,0.3);
+    border-top-color:#fff; border-radius:50%;
+    animation:spin 0.75s linear infinite;
   }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes spin { to { transform:rotate(360deg); } }
 
   @media print {
-    @page { size: 215mm 330mm; margin: 10mm; }
-    body { background: white; padding: 0; }
-    .panel, .no-print { display: none !important; }
-    .kertas { box-shadow: none; width: 100%; padding: 0; }
+    @page { size: 215mm 330mm; margin: 8mm 15mm 10mm 15mm; }
+    body { background:white; padding:0; }
+    .panel, .no-print { display:none !important; }
+    .kertas { box-shadow:none; width:100%; padding:0; min-height:unset; }
+    col.c-aksi { width: 0 !important; display:none !important; }
+    table.laporan { width: 185mm !important; }
   }
-
-  @media (max-width: 215mm) {
-    .kertas, .panel { width: 100%; }
-    .kertas { height: auto; padding: 10mm; }
+  @media (max-width:215mm) {
+    .kertas, .panel { width:100%; }
+    .kertas { height:auto; }
   }
 </style>
 </head>
 <body>
 
-<div id="loadingOverlay">
-  <div class="spinner"></div>
-  <div>Mengompresi foto…</div>
-</div>
+<div id="loadingOverlay"><div class="spinner"></div><div>Mengompresi foto…</div></div>
 
 <div class="kertas" id="areaCetak">
+
   <div class="header">
     <h2>Laporan Kegiatan Harian</h2>
     <h3>Penyedia Jasa Lainnya Perorangan (PJLP)</h3>
   </div>
 
   <table class="identitas">
-    <tr><td style="width:100px">Nama</td><td style="width:15px;text-align:center">:</td><td id="outNama">Mohamad Asep Suryana</td></tr>
+    <tr><td style="width:75px">Nama</td><td style="width:12px;text-align:center">:</td><td id="outNama">Mohamad Asep Suryana</td></tr>
     <tr><td>Jabatan</td><td style="text-align:center">:</td><td id="outJabatan">Tenaga Penanganan Prasarana dan Sarana Umum</td></tr>
     <tr><td>Unit Kerja</td><td style="text-align:center">:</td><td id="outUnitKerja">Dinas Perumahan Rakyat Dan Kawasan Permukiman Kota Cirebon</td></tr>
     <tr><td>Bulan</td><td style="text-align:center">:</td><td id="outBulan">April 2026</td></tr>
   </table>
 
   <table class="laporan">
+    <colgroup>
+      <col class="c-no">
+      <col class="c-tgl">
+      <col class="c-lok">
+      <col class="c-ur">
+      <col class="c-foto">
+      <col class="c-aksi">
+    </colgroup>
     <thead>
       <tr>
-        <th class="col-no">NO</th>
-        <th class="col-tgl">TANGGAL</th>
-        <th class="col-lok">LOKASI KERJA</th>
-        <th class="col-uraian">URAIAN TUGAS</th>
-        <th class="col-foto">DOKUMENTASI</th>
-        <th class="col-aksi no-print">AKSI</th>
+        <th>NO</th>
+        <th>TANGGAL</th>
+        <th>LOKASI KERJA</th>
+        <th>URAIAN TUGAS</th>
+        <th>DOKUMENTASI</th>
+        <th class="no-print">AKSI</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -185,13 +213,15 @@
       <span class="ttd-nama">LINDA SRI NURLINDAYANI, A.Mk</span><br>NIP. 19790806 200801 2 005
     </div>
     <div class="ttd-box">
-      Cirebon, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="outBulanTTD">April 2026</span><br>Pengawas
+      Cirebon, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="outBulanTTD">April 2026</span><br>Pengawas
       <div class="ttd-space"></div>
       <span class="ttd-nama">RAGA SUNGKAWA</span><br>NIPPPKPW. 19950214 202521 1 048
     </div>
   </div>
+
 </div>
 
+<!-- PANEL INPUT -->
 <div class="panel no-print">
   <div class="grid2">
     <div class="ig"><label>Nama Lengkap</label><input type="text" id="inNama" value="Mohamad Asep Suryana"></div>
@@ -201,156 +231,119 @@
   <div class="ig"><label>Unit Kerja</label><input type="text" id="inUnitKerja" value="Dinas Perumahan Rakyat Dan Kawasan Permukiman Kota Cirebon"></div>
   <div class="grid2">
     <div class="ig"><label>Tanggal Kegiatan</label><input type="date" id="inTgl"></div>
-    <div class="ig"><label>Lokasi (Cth: Jl. Cipto)</label><input type="text" id="inLok" placeholder="Masukkan lokasi kerja"></div>
+    <div class="ig"><label>Lokasi Kerja</label><input type="text" id="inLok" placeholder="Cth: Jl. Cipto Mangunkusumo"></div>
   </div>
-  <div class="ig"><label>Uraian Tugas</label><textarea id="inUraian" rows="3" placeholder="Apa yang Anda kerjakan hari ini?"></textarea></div>
+  <div class="ig"><label>Uraian Tugas</label><textarea id="inUraian" rows="3" placeholder="Apa yang dikerjakan hari ini?"></textarea></div>
   <div class="ig">
-    <label>Foto Kegiatan <small style="color:#888">(otomatis dikompres agar ringan &amp; bisa dicetak)</small></label>
+    <label>Foto Kegiatan <small style="color:#888">(dikompres otomatis — tampil landscape 6,3×4,2 cm)</small></label>
     <input type="file" id="inFoto" accept="image/*">
   </div>
-
   <div id="limitInfo">Baris terisi: <span id="jmlBaris">0</span> / 7</div>
-
   <div class="btn-group">
     <button style="background:#27ae60;color:#fff" id="btnSimpan" onclick="simpan()">＋ Tambah</button>
     <button style="background:#2c5f9e;color:#fff" onclick="window.print()">🖨 Cetak / PDF</button>
-    <button style="background:#218838;color:#fff" onclick="exportWord()">📝 Edit di Word</button>
+    <button style="background:#218838;color:#fff" onclick="exportWord()">📝 Export Word</button>
     <button style="background:#e74c3c;color:#fff" onclick="resetData()">↺ Reset Semua</button>
   </div>
 </div>
 
 <script>
-  const MAX_BARIS  = 7;
-  const MAX_LEBAR  = 900;    // resize foto max lebar 900px
-  const MAX_BYTES  = 180000; // target ~180 KB (base64 ~37% lebih besar, jadi ~130 KB asli)
+  const MAX_BARIS=7, MAX_LEBAR=900, MAX_BYTES=180000;
+  let dataLaporan=[], editIndex=-1;
 
-  let dataLaporan = [];
-  let editIndex   = -1;
-
-  /* ─── Kompresi foto via Canvas (cepat, tanpa library) ─── */
-  function kompresiFoto(file) {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const img = new Image();
-        img.onload = () => {
-          let w = img.width, h = img.height;
-          // Resize proporsional jika terlalu besar
-          if (w > MAX_LEBAR) { h = Math.round(h * MAX_LEBAR / w); w = MAX_LEBAR; }
-
-          const canvas = document.createElement('canvas');
-          canvas.width = w; canvas.height = h;
-          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-
-          // Turunkan kualitas JPEG bertahap sampai ukuran cukup kecil
-          let q   = 0.85;
-          let b64 = canvas.toDataURL('image/jpeg', q);
-          while (b64.length > MAX_BYTES * 1.37 && q > 0.25) {
-            q  -= 0.07;
-            b64 = canvas.toDataURL('image/jpeg', q);
-          }
-          resolve(b64);
+  function kompresiFoto(file){
+    return new Promise(resolve=>{
+      const r=new FileReader();
+      r.onload=ev=>{
+        const img=new Image();
+        img.onload=()=>{
+          let w=img.width,h=img.height;
+          if(w>MAX_LEBAR){h=Math.round(h*MAX_LEBAR/w);w=MAX_LEBAR;}
+          const c=document.createElement('canvas');
+          c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+          let q=0.85,b=c.toDataURL('image/jpeg',q);
+          while(b.length>MAX_BYTES*1.37&&q>0.25){q-=0.07;b=c.toDataURL('image/jpeg',q);}
+          resolve(b);
         };
-        img.src = ev.target.result;
+        img.src=ev.target.result;
       };
-      reader.readAsDataURL(file);
+      r.readAsDataURL(file);
     });
   }
 
-  /* ─── Simpan ke localStorage ─── */
-  function simpanLS() {
-    try {
-      localStorage.setItem('pjlp_db', JSON.stringify(dataLaporan));
-    } catch {
-      alert('Penyimpanan penuh! Coba hapus beberapa baris atau hapus foto yang terlalu banyak.');
-    }
+  function simpanLS(){
+    try{localStorage.setItem('pjlp_db',JSON.stringify(dataLaporan));}
+    catch{alert('Penyimpanan penuh!');}
   }
 
-  /* ─── Init ─── */
-  window.onload = () => {
-    const dS = localStorage.getItem('pjlp_db');
-    const pS = localStorage.getItem('pjlp_prof');
-    if (dS) { dataLaporan = JSON.parse(dS); tampilkanTabel(); }
-    if (pS) {
-      const p = JSON.parse(pS);
-      document.getElementById('inNama').value      = p.nama;
-      document.getElementById('inJabatan').value   = p.jabatan;
-      document.getElementById('inUnitKerja').value = p.unit;
-      document.getElementById('inBulan').value     = p.bulan;
+  window.onload=()=>{
+    const dS=localStorage.getItem('pjlp_db');
+    const pS=localStorage.getItem('pjlp_prof');
+    if(dS){dataLaporan=JSON.parse(dS);tampilkanTabel();}
+    if(pS){const p=JSON.parse(pS);
+      document.getElementById('inNama').value=p.nama;
+      document.getElementById('inJabatan').value=p.jabatan;
+      document.getElementById('inUnitKerja').value=p.unit;
+      document.getElementById('inBulan').value=p.bulan;
       updateLabel(p);
     }
   };
 
-  function updateLabel(p) {
-    document.getElementById('outNama').innerText      = p.nama;
-    document.getElementById('outJabatan').innerText   = p.jabatan;
-    document.getElementById('outUnitKerja').innerText = p.unit;
-    document.getElementById('outBulan').innerText     = p.bulan;
-    document.getElementById('outBulanTTD').innerText  = p.bulan;
+  function updateLabel(p){
+    document.getElementById('outNama').innerText=p.nama;
+    document.getElementById('outJabatan').innerText=p.jabatan;
+    document.getElementById('outUnitKerja').innerText=p.unit;
+    document.getElementById('outBulan').innerText=p.bulan;
+    document.getElementById('outBulanTTD').innerText=p.bulan;
   }
 
-  function updateLimitInfo() {
-    document.getElementById('jmlBaris').innerText  = dataLaporan.length;
-    document.getElementById('limitInfo').className = dataLaporan.length >= MAX_BARIS ? 'penuh' : '';
+  function updateLimitInfo(){
+    document.getElementById('jmlBaris').innerText=dataLaporan.length;
+    document.getElementById('limitInfo').className=dataLaporan.length>=MAX_BARIS?'penuh':'';
   }
 
-  /* ─── Tambah / Update ─── */
-  async function simpan() {
-    const tgl    = document.getElementById('inTgl').value;
-    const lok    = document.getElementById('inLok').value;
-    const uraian = document.getElementById('inUraian').value;
-    const fInp   = document.getElementById('inFoto');
+  async function simpan(){
+    const tgl=document.getElementById('inTgl').value;
+    const lok=document.getElementById('inLok').value;
+    const uraian=document.getElementById('inUraian').value;
+    const fInp=document.getElementById('inFoto');
+    if(!tgl||!uraian)return alert('Lengkapi Tanggal dan Uraian Tugas!');
+    if(editIndex===-1&&dataLaporan.length>=MAX_BARIS)return alert('Maksimal 7 baris.');
 
-    if (!tgl || !uraian) return alert('Lengkapi Tanggal dan Uraian Tugas!');
-    if (editIndex === -1 && dataLaporan.length >= MAX_BARIS)
-      return alert('Maksimal 7 baris sudah tercapai. Hapus salah satu baris terlebih dahulu.');
-
-    // Simpan profil
-    const prof = {
-      nama:    document.getElementById('inNama').value,
-      jabatan: document.getElementById('inJabatan').value,
-      unit:    document.getElementById('inUnitKerja').value,
-      bulan:   document.getElementById('inBulan').value
+    const prof={
+      nama:document.getElementById('inNama').value,
+      jabatan:document.getElementById('inJabatan').value,
+      unit:document.getElementById('inUnitKerja').value,
+      bulan:document.getElementById('inBulan').value
     };
-    localStorage.setItem('pjlp_prof', JSON.stringify(prof));
+    localStorage.setItem('pjlp_prof',JSON.stringify(prof));
     updateLabel(prof);
 
-    const [yy, mm, dd] = tgl.split('-');
-    const tglIndo = `${dd}/${mm}/${yy}`;
+    const [yy,mm,dd]=tgl.split('-');
+    const tglIndo=`${dd}/${mm}/${yy}`;
 
-    // Foto: kompres jika ada file baru, pakai lama jika tidak
-    let fotoB64 = (editIndex !== -1) ? (dataLaporan[editIndex].foto || null) : null;
-    if (fInp.files && fInp.files[0]) {
+    let fotoB64=(editIndex!==-1)?(dataLaporan[editIndex].foto||null):null;
+    if(fInp.files&&fInp.files[0]){
       document.getElementById('loadingOverlay').classList.add('show');
-      fotoB64 = await kompresiFoto(fInp.files[0]);
+      fotoB64=await kompresiFoto(fInp.files[0]);
       document.getElementById('loadingOverlay').classList.remove('show');
     }
 
-    const obj = { tgl: tglIndo, raw: tgl, lok, uraian, foto: fotoB64 };
-
-    if (editIndex === -1) {
-      dataLaporan.push(obj);
-    } else {
-      dataLaporan[editIndex] = obj;
-      editIndex = -1;
-      document.getElementById('btnSimpan').innerText = '＋ Tambah';
-    }
-
-    simpanLS();
-    tampilkanTabel();
-    bersihkanForm();
+    const obj={tgl:tglIndo,raw:tgl,lok,uraian,foto:fotoB64};
+    if(editIndex===-1){dataLaporan.push(obj);}
+    else{dataLaporan[editIndex]=obj;editIndex=-1;document.getElementById('btnSimpan').innerText='＋ Tambah';}
+    simpanLS();tampilkanTabel();bersihkanForm();
   }
 
-  /* ─── Render tabel (satu innerHTML, lebih cepat) ─── */
-  function tampilkanTabel() {
-    document.getElementById('tbody').innerHTML = dataLaporan.map((item, i) => `
+  function tampilkanTabel(){
+    document.getElementById('tbody').innerHTML=dataLaporan.map((item,i)=>`
       <tr>
-        <td style="text-align:center">${i + 1}</td>
-        <td style="text-align:center">${item.tgl}</td>
-        <td>${item.lok}</td>
-        <td style="text-align:justify">${item.uraian.replace(/\n/g, '<br>')}</td>
-        <td style="text-align:center">${item.foto ? `<img src="${item.foto}" class="foto-preview">` : ''}</td>
-        <td class="no-print" style="text-align:center">
+        <td class="cell-no">${i+1}</td>
+        <td class="cell-tgl">${item.tgl}</td>
+        <td style="vertical-align:top">${item.lok}</td>
+        <td style="vertical-align:top">${item.uraian.replace(/\n/g,'<br>')}</td>
+        <td class="cell-foto">${item.foto?`<img src="${item.foto}" class="foto-preview">`:''}</td>
+        <td class="no-print" style="text-align:center;vertical-align:middle">
           <button class="btn-edit-s" onclick="mulaiEdit(${i})">Edit</button>
           <button class="btn-del-s"  onclick="hapusBaris(${i})">Hapus</button>
         </td>
@@ -358,56 +351,44 @@
     updateLimitInfo();
   }
 
-  function mulaiEdit(i) {
-    editIndex = i;
-    document.getElementById('inTgl').value    = dataLaporan[i].raw;
-    document.getElementById('inLok').value    = dataLaporan[i].lok;
-    document.getElementById('inUraian').value = dataLaporan[i].uraian;
-    document.getElementById('btnSimpan').innerText = '✔ Update Data';
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  function mulaiEdit(i){
+    editIndex=i;
+    document.getElementById('inTgl').value=dataLaporan[i].raw;
+    document.getElementById('inLok').value=dataLaporan[i].lok;
+    document.getElementById('inUraian').value=dataLaporan[i].uraian;
+    document.getElementById('btnSimpan').innerText='✔ Update Data';
+    window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
   }
 
-  function hapusBaris(i) {
-    if (confirm('Hapus baris ini?')) {
-      dataLaporan.splice(i, 1);
-      simpanLS();
-      tampilkanTabel();
-    }
+  function hapusBaris(i){
+    if(confirm('Hapus baris ini?')){dataLaporan.splice(i,1);simpanLS();tampilkanTabel();}
   }
 
-  function resetData() {
-    if (confirm('PERINGATAN: Semua data laporan dan profil akan dihapus permanen. Lanjutkan?')) {
-      localStorage.clear();
-      location.reload();
-    }
+  function resetData(){
+    if(confirm('PERINGATAN: Semua data dihapus permanen. Lanjutkan?')){localStorage.clear();location.reload();}
   }
 
-  function bersihkanForm() {
-    document.getElementById('inTgl').value    = '';
-    document.getElementById('inLok').value    = '';
-    document.getElementById('inUraian').value = '';
-    document.getElementById('inFoto').value   = '';
+  function bersihkanForm(){
+    ['inTgl','inLok','inUraian','inFoto'].forEach(id=>document.getElementById(id).value='');
   }
 
-  function exportWord() {
-    const html = `
-      <html xmlns:o='urn:schemas-microsoft-com:office:office'
-            xmlns:w='urn:schemas-microsoft-com:office:word'
-            xmlns='http://www.w3.org/TR/REC-html40'>
+  function exportWord(){
+    const html=`<html xmlns:o='urn:schemas-microsoft-com:office:office'
+      xmlns:w='urn:schemas-microsoft-com:office:word'
+      xmlns='http://www.w3.org/TR/REC-html40'>
       <head><meta charset='utf-8'><style>
-        body { font-family: 'Arial Narrow', sans-serif; }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid black; padding: 5px; vertical-align: top; }
-        .header { text-align: center; }
-        img { max-width: 150px; }
+        body{font-family:Arial,sans-serif;font-size:12pt}
+        table{border-collapse:collapse;width:100%}
+        th,td{border:1px solid black;padding:4px;vertical-align:top;font-size:11pt}
+        img{width:63mm;height:42mm;object-fit:cover}
+        .no-print{display:none}
       </style></head>
       <body>${document.getElementById('areaCetak').innerHTML}</body></html>`;
-    const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href = url; a.download = 'Laporan_PJLP.doc';
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 5000);
+    const blob=new Blob(['\ufeff',html],{type:'application/msword'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download='Laporan_PJLP.doc';a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),5000);
   }
 </script>
 </body>
