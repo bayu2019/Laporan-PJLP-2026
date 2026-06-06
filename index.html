@@ -17,10 +17,9 @@
     padding: 20px 10px;
   }
 
-  /* F4 = 215mm x 330mm — padding top kecil agar judul rapat ke atas */
   .kertas {
     width: 215mm;
-    min-height: 330mm;
+    height: auto;
     background: #fff;
     padding: 8mm 15mm 10mm 15mm;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
@@ -28,7 +27,6 @@
     font-size: 12pt;
   }
 
-  /* HEADER — langsung dari tepi atas (padding 8mm) */
   .header {
     text-align: center;
     margin-bottom: 14px;
@@ -41,7 +39,6 @@
     line-height: 1.5;
   }
 
-  /* IDENTITAS */
   .identitas {
     width: 100%;
     border-collapse: collapse;
@@ -51,10 +48,6 @@
   }
   .identitas td { padding: 1px 0; border: none !important; }
 
-  /* TABEL
-     Konten lebar = 215 - 15 - 15 = 185mm
-     NO:8mm | TANGGAL:27mm | LOKASI:33mm | URAIAN:auto | FOTO:68mm | AKSI:56px(no-print)
-  */
   table.laporan {
     width: 100%;
     border-collapse: collapse;
@@ -94,10 +87,9 @@
   td.cell-tgl { text-align:center; vertical-align:middle; white-space:nowrap; }
   td.cell-foto { text-align:center; vertical-align:top; padding:3px; }
 
-  /* Foto landscape 6,3cm × 4,2cm */
   .foto-preview {
     width: 61mm;
-    height: 42mm;
+    height: 42mm; /* default, akan di-override JS */
     object-fit: cover;
     display: block;
     margin: 0 auto;
@@ -110,12 +102,22 @@
     margin-top: 16px;
     font-family: Arial, sans-serif;
     font-size: 11pt;
+    align-items: flex-start;
   }
-  .ttd-box   { width: 45%; text-align: center; }
-  .ttd-space { height: 55px; }
-  .ttd-nama  { font-weight: bold; text-decoration: underline; }
+  .ttd-box       { width: 48%; text-align: center; }
+  .ttd-space     { height: 55px; }
+  .ttd-nama      { font-weight: bold; text-decoration: underline; }
+  .ttd-nip       { white-space: nowrap; font-size: 10.5pt; }
+  /* Baris kedua TTD: Linda di tengah bawah setelah Asep */
+  .ttd-wrapper2 {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 11pt;
+  }
+  .ttd-box-center { width: 50%; text-align: center; }
 
-  /* PANEL INPUT */
   .panel {
     width: 215mm;
     margin-top: 20px;
@@ -135,6 +137,17 @@
   .btn-del-s  { background:#e74c3c; color:#fff; font-size:8pt; width:100%; padding:5px; }
   #limitInfo       { font-size:10pt; color:#555; margin-top:6px; }
   #limitInfo.penuh { color:#e74c3c; font-weight:bold; }
+
+  /* Bagian edit TTD di panel */
+  .ttd-section-label {
+    font-weight: bold;
+    font-size: 10pt;
+    color: #2c5f9e;
+    margin: 14px 0 6px 0;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 4px;
+  }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 
   #loadingOverlay {
     display:none; position:fixed; inset:0;
@@ -156,7 +169,7 @@
     @page { size: 215mm 330mm; margin: 8mm 15mm 10mm 15mm; }
     body { background:white; padding:0; }
     .panel, .no-print { display:none !important; }
-    .kertas { box-shadow:none; width:100%; padding:0; min-height:unset; }
+    .kertas { box-shadow:none; width:100%; padding:0; height:auto; }
     col.c-aksi { width: 0 !important; display:none !important; }
     table.laporan { width: 185mm !important; }
   }
@@ -206,16 +219,36 @@
     <tbody id="tbody"></tbody>
   </table>
 
+  <!-- Baris 1: Kiri=Raga (Pengawas), Kanan=Asep (Yang Membuat) -->
   <div class="ttd-wrapper">
+
+    <!-- KIRI: Pengawas -->
     <div class="ttd-box">
+      Pengawas
+      <div class="ttd-space"></div>
+      <span class="ttd-nama" id="outNamaTTDKiri">RAGA SUNGKAWA</span><br>
+      <span class="ttd-nip" id="outNIPKiri">NIPPPKPW. 19950214 202521 1 048</span>
+    </div>
+
+    <!-- KANAN: Tanggal + Yang Membuat -->
+    <div class="ttd-box">
+      Cirebon,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="outTglCirebon">Mei 2026</span>
+      <div style="height:12px;"></div>
+      Yang Membuat,
+      <div class="ttd-space"></div>
+      <span class="ttd-nama" id="outNamaTTDKanan">MOHAMAD ASEP SURYANA</span><br>
+      <span class="ttd-nip" id="outNIPKanan">NIPPPKPW. xxxxxxxxxxxxxxxx</span>
+    </div>
+
+  </div>
+
+  <!-- Baris 2: Linda (Mengetahui/PPTK) di tengah bawah -->
+  <div class="ttd-wrapper2">
+    <div class="ttd-box-center">
       Mengetahui,<br>Pejabat Pelaksana Teknis Kegiatan
       <div class="ttd-space"></div>
-      <span class="ttd-nama">LINDA SRI NURLINDAYANI, A.Mk</span><br>NIP. 19790806 200801 2 005
-    </div>
-    <div class="ttd-box">
-      Cirebon, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="outBulanTTD">April 2026</span><br>Pengawas
-      <div class="ttd-space"></div>
-      <span class="ttd-nama">RAGA SUNGKAWA</span><br>NIPPPKPW. 19950214 202521 1 048
+      <span class="ttd-nama" id="outNamaTTDTengah">LINDA SRI NURLINDAYANI, A.Mk</span><br>
+      <span class="ttd-nip" id="outNIPTengah">NIP. 19790806 200801 2 005</span>
     </div>
   </div>
 
@@ -229,6 +262,31 @@
   </div>
   <div class="ig"><label>Jabatan</label><input type="text" id="inJabatan" value="Tenaga Penanganan Prasarana dan Sarana Umum"></div>
   <div class="ig"><label>Unit Kerja</label><input type="text" id="inUnitKerja" value="Dinas Perumahan Rakyat Dan Kawasan Permukiman Kota Cirebon"></div>
+
+  <!-- EDIT TTD -->
+  <div class="ttd-section-label">✍️ Edit Tanda Tangan</div>
+  <div class="grid3">
+    <div class="ig"><label>📅 Tanggal Cirebon</label><input type="text" id="inTglCirebon" value="Mei 2026" placeholder="cth: Mei 2026"></div>
+    <div></div>
+    <div></div>
+  </div>
+  <div class="grid3">
+    <div>
+      <div class="ig"><label>Nama Pengawas (Kiri)</label><input type="text" id="inNamaTTDKiri" value="RAGA SUNGKAWA"></div>
+      <div class="ig"><label>NIP Pengawas</label><input type="text" id="inNIPKiri" value="NIPPPKPW. 19950214 202521 1 048"></div>
+    </div>
+    <div>
+      <div class="ig"><label>Nama PPTK (Tengah)</label><input type="text" id="inNamaTTDTengah" value="LINDA SRI NURLINDAYANI, A.Mk"></div>
+      <div class="ig"><label>NIP PPTK</label><input type="text" id="inNIPTengah" value="NIP. 19790806 200801 2 005"></div>
+    </div>
+    <div>
+      <div class="ig"><label>Nama Pembuat (Kanan)</label><input type="text" id="inNamaTTDKanan" value="MOHAMAD ASEP SURYANA"></div>
+      <div class="ig"><label>NIP Pembuat</label><input type="text" id="inNIPKanan" value="NIPPPKPW. xxxxxxxxxxxxxxxx"></div>
+    </div>
+  </div>
+
+  <div style="border-top:1px solid #ccc; margin: 10px 0;"></div>
+
   <div class="grid2">
     <div class="ig"><label>Tanggal Kegiatan</label><input type="date" id="inTgl"></div>
     <div class="ig"><label>Lokasi Kerja</label><input type="text" id="inLok" placeholder="Cth: Jl. Cipto Mangunkusumo"></div>
@@ -280,21 +338,51 @@
     const dS=localStorage.getItem('pjlp_db');
     const pS=localStorage.getItem('pjlp_prof');
     if(dS){dataLaporan=JSON.parse(dS);tampilkanTabel();}
-    if(pS){const p=JSON.parse(pS);
-      document.getElementById('inNama').value=p.nama;
-      document.getElementById('inJabatan').value=p.jabatan;
-      document.getElementById('inUnitKerja').value=p.unit;
-      document.getElementById('inBulan').value=p.bulan;
+    if(pS){
+      const p=JSON.parse(pS);
+      document.getElementById('inNama').value=p.nama||'';
+      document.getElementById('inJabatan').value=p.jabatan||'';
+      document.getElementById('inUnitKerja').value=p.unit||'';
+      document.getElementById('inBulan').value=p.bulan||'';
+      document.getElementById('inTglCirebon').value=p.tglCirebon||'Mei 2026';
+      document.getElementById('inNamaTTDKiri').value=p.namaKiri||'RAGA SUNGKAWA';
+      document.getElementById('inNIPKiri').value=p.nipKiri||'NIPPPKPW. 19950214 202521 1 048';
+      document.getElementById('inNamaTTDTengah').value=p.namaTengah||'LINDA SRI NURLINDAYANI, A.Mk';
+      document.getElementById('inNIPTengah').value=p.nipTengah||'NIP. 19790806 200801 2 005';
+      document.getElementById('inNamaTTDKanan').value=p.namaKanan||'MOHAMAD ASEP SURYANA';
+      document.getElementById('inNIPKanan').value=p.nipKanan||'NIPPPKPW. xxxxxxxxxxxxxxxx';
       updateLabel(p);
     }
+
+    // Live update TTD fields
+    ['inTglCirebon','inNamaTTDKiri','inNIPKiri','inNamaTTDTengah','inNIPTengah','inNamaTTDKanan','inNIPKanan'].forEach(id=>{
+      document.getElementById(id).addEventListener('input', updateTTD);
+    });
+    ['inNama','inJabatan','inUnitKerja','inBulan'].forEach(id=>{
+      document.getElementById(id).addEventListener('input', ()=>updateLabel({
+        nama: document.getElementById('inNama').value,
+        jabatan: document.getElementById('inJabatan').value,
+        unit: document.getElementById('inUnitKerja').value,
+        bulan: document.getElementById('inBulan').value
+      }));
+    });
   };
 
+  function updateTTD(){
+    document.getElementById('outTglCirebon').innerText   = document.getElementById('inTglCirebon').value;
+    document.getElementById('outNamaTTDKiri').innerText  = document.getElementById('inNamaTTDKiri').value;
+    document.getElementById('outNIPKiri').innerText      = document.getElementById('inNIPKiri').value;
+    document.getElementById('outNamaTTDTengah').innerText= document.getElementById('inNamaTTDTengah').value;
+    document.getElementById('outNIPTengah').innerText    = document.getElementById('inNIPTengah').value;
+    document.getElementById('outNamaTTDKanan').innerText = document.getElementById('inNamaTTDKanan').value;
+    document.getElementById('outNIPKanan').innerText     = document.getElementById('inNIPKanan').value;
+  }
+
   function updateLabel(p){
-    document.getElementById('outNama').innerText=p.nama;
-    document.getElementById('outJabatan').innerText=p.jabatan;
-    document.getElementById('outUnitKerja').innerText=p.unit;
-    document.getElementById('outBulan').innerText=p.bulan;
-    document.getElementById('outBulanTTD').innerText=p.bulan;
+    document.getElementById('outNama').innerText=p.nama||'';
+    document.getElementById('outJabatan').innerText=p.jabatan||'';
+    document.getElementById('outUnitKerja').innerText=p.unit||'';
+    document.getElementById('outBulan').innerText=p.bulan||'';
   }
 
   function updateLimitInfo(){
@@ -314,10 +402,18 @@
       nama:document.getElementById('inNama').value,
       jabatan:document.getElementById('inJabatan').value,
       unit:document.getElementById('inUnitKerja').value,
-      bulan:document.getElementById('inBulan').value
+      bulan:document.getElementById('inBulan').value,
+      tglCirebon:document.getElementById('inTglCirebon').value,
+      namaKiri:document.getElementById('inNamaTTDKiri').value,
+      nipKiri:document.getElementById('inNIPKiri').value,
+      namaTengah:document.getElementById('inNamaTTDTengah').value,
+      nipTengah:document.getElementById('inNIPTengah').value,
+      namaKanan:document.getElementById('inNamaTTDKanan').value,
+      nipKanan:document.getElementById('inNIPKanan').value
     };
     localStorage.setItem('pjlp_prof',JSON.stringify(prof));
     updateLabel(prof);
+    updateTTD();
 
     const [yy,mm,dd]=tgl.split('-');
     const tglIndo=`${dd}/${mm}/${yy}`;
@@ -349,6 +445,44 @@
         </td>
       </tr>`).join('');
     updateLimitInfo();
+    setTimeout(sesuaikanFoto, 50);
+  }
+
+  function sesuaikanFoto(){
+    const n = dataLaporan.length;
+    if(n === 0) return;
+
+    // Tinggi halaman F4 dalam px (330mm) dikurangi margin atas+bawah (18mm)
+    const PX_PER_MM = 96 / 25.4;
+    const halamanPx = 312 * PX_PER_MM; // 330 - 18mm margin
+
+    // Ukuran elemen tetap (header, identitas, thead, TTD, ttd2)
+    const kertas    = document.getElementById('areaCetak');
+    const thead     = kertas.querySelector('thead');
+    const ttd1      = kertas.querySelector('.ttd-wrapper');
+    const ttd2      = kertas.querySelector('.ttd-wrapper2');
+    const header    = kertas.querySelector('.header');
+    const identitas = kertas.querySelector('.identitas');
+
+    const tinggiTetap =
+      (header    ? header.offsetHeight    : 0) +
+      (identitas ? identitas.offsetHeight : 0) +
+      (thead     ? thead.offsetHeight     : 0) +
+      (ttd1      ? ttd1.offsetHeight      : 0) +
+      (ttd2      ? ttd2.offsetHeight      : 0) +
+      80; // margin, padding, ttd2 margin, buffer
+
+    const sisaPx   = halamanPx - tinggiTetap;
+    const fotoMaxPx = Math.floor(sisaPx / n) - 10; // 10px padding antar baris
+
+    // Batasan: min 20mm, max 42mm (default)
+    const minPx = Math.round(20 * PX_PER_MM);
+    const maxPx = Math.round(42 * PX_PER_MM);
+    const tinggiPx = Math.max(minPx, Math.min(maxPx, fotoMaxPx));
+
+    document.querySelectorAll('.foto-preview').forEach(img => {
+      img.style.height = tinggiPx + 'px';
+    });
   }
 
   function mulaiEdit(i){
